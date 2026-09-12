@@ -201,29 +201,29 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
               </defs>
 
               {/* Background dark grid */}
-              <rect width="1000" height="700" fill="#090d16" />
+              <rect width="1000" height="700" fill="#090d16" className="map-svg-bg transition-colors" />
               <rect width="1000" height="700" fill="url(#grid)" />
 
               {/* District polygons / zones */}
               {/* Tan Binh & TSN Airport area */}
-              <rect x="220" y="80" width="280" height="180" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" />
-              <text x="240" y="110" fill="#475569" fontSize="13" fontWeight="bold">QUẬN TÂN BÌNH / SÂN BAY TSN</text>
+              <rect x="220" y="80" width="280" height="180" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" className="map-district-zone" />
+              <text x="240" y="110" fill="#475569" fontSize="13" fontWeight="bold" className="map-district-text">QUẬN TÂN BÌNH / SÂN BAY TSN</text>
 
               {/* District 1 / Central Area */}
-              <rect x="520" y="320" width="220" height="180" rx="20" fill="#131c2e" opacity="0.6" stroke="#1e293b" />
-              <text x="540" y="350" fill="#475569" fontSize="13" fontWeight="bold">TRUNG TÂM QUẬN 1 &amp; 3</text>
+              <rect x="520" y="320" width="220" height="180" rx="20" fill="#131c2e" opacity="0.6" stroke="#1e293b" className="map-district-zone" />
+              <text x="540" y="350" fill="#475569" fontSize="13" fontWeight="bold" className="map-district-text">TRUNG TÂM QUẬN 1 &amp; 3</text>
 
               {/* Binh Thanh */}
-              <rect x="580" y="140" width="240" height="160" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" />
-              <text x="600" y="170" fill="#475569" fontSize="13" fontWeight="bold">QUẬN BÌNH THẠNH</text>
+              <rect x="580" y="140" width="240" height="160" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" className="map-district-zone" />
+              <text x="600" y="170" fill="#475569" fontSize="13" fontWeight="bold" className="map-district-text">QUẬN BÌNH THẠNH</text>
 
               {/* District 5 / Cho Ray */}
-              <rect x="240" y="380" width="240" height="180" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" />
-              <text x="260" y="410" fill="#475569" fontSize="13" fontWeight="bold">QUẬN 5 &amp; QUẬN 10</text>
+              <rect x="240" y="380" width="240" height="180" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" className="map-district-zone" />
+              <text x="260" y="410" fill="#475569" fontSize="13" fontWeight="bold" className="map-district-text">QUẬN 5 &amp; QUẬN 10</text>
 
               {/* Thu Duc / Sala */}
-              <rect x="720" y="340" width="240" height="260" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" />
-              <text x="740" y="370" fill="#475569" fontSize="13" fontWeight="bold">TP. THỦ ĐỨC (SALA)</text>
+              <rect x="720" y="340" width="240" height="260" rx="20" fill="#131c2e" opacity="0.5" stroke="#1e293b" className="map-district-zone" />
+              <text x="740" y="370" fill="#475569" fontSize="13" fontWeight="bold" className="map-district-text">TP. THỦ ĐỨC (SALA)</text>
 
               {/* Major Roads / Arteries */}
               {/* Highway / Hanoi Highway & Dien Bien Phu */}

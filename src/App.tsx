@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Sun, Moon } from 'lucide-react';
 import { Header } from './components/Header';
 import { DashboardView } from './components/DashboardView';
 import { InteractiveMap } from './components/InteractiveMap';
@@ -14,6 +15,36 @@ export default function App() {
   const [telemetryLogs, setTelemetryLogs] = useState<NoiseTelemetryLog[]>([]);
   const [httpLogs, setHttpLogs] = useState<HttpLogEntry[]>([]);
   const [selectedStation, setSelectedStation] = useState<NoiseStation | null>(null);
+
+  // Theme switch: 'dark' | 'light'
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      const saved = localStorage.getItem('iot_noisesense_theme');
+      return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      }
+      localStorage.setItem('iot_noisesense_theme', theme);
+    } catch (e) {
+      console.warn('Theme save failed', e);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Simulation controls
   const [isAutoRunning, setIsAutoRunning] = useState<boolean>(true);
@@ -63,7 +94,7 @@ export default function App() {
   }, [stations]);
 
   // Trigger 1 simulation step
-  const handleSimulateStep = useCallback(async (targetId?: string) => {
+  const handleSimulateStep = useCallback(async (targetId?: string, isManual = false) => {
     setIsStepLoading(true);
     try {
       const res = await api.stepSimulation(targetId);
@@ -76,12 +107,14 @@ export default function App() {
         api.getHttpLogs(80)
       ]);
 
-      if (stRes?.data) setStations(stRes.data);
+      if (stRes?.data && stRes.data.length > 0) setStations(stRes.data);
       if (telRes?.data) setTelemetryLogs(telRes.data);
       if (logsRes?.data) setHttpLogs(logsRes.data);
     } catch (err: any) {
-      console.error('Simulation step failed:', err);
-      showToast('Lỗi khi thực hiện bước mô phỏng');
+      console.warn('Simulation step notice:', err?.message || err);
+      if (isManual) {
+        showToast('Không thể kết nối trạm đo. Đang thử lại...');
+      }
     } finally {
       setIsStepLoading(false);
     }
@@ -199,11 +232,32 @@ export default function App() {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-white">
       {/* Toast notification */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 bg-slate-800 text-white px-4 py-2.5 rounded-xl border border-slate-700 shadow-xl text-xs font-medium flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
+        <div className="fixed bottom-16 right-5 z-50 bg-slate-800 text-white px-4 py-2.5 rounded-xl border border-slate-700 shadow-xl text-xs font-medium flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2">
           <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
           <span>{toastMessage}</span>
         </div>
       )}
+
+      {/* Floating Theme Switcher Button (Always Visible & Accessible) */}
+      <button
+        id="floating-theme-switch"
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
+        aria-label="Chuyển đổi giao diện sáng tối"
+        className="fixed bottom-5 right-5 z-40 flex items-center gap-2 px-3.5 py-2.5 rounded-full shadow-2xl border transition-all active:scale-95 bg-slate-800/95 hover:bg-slate-700 text-slate-100 border-slate-600 backdrop-blur-sm cursor-pointer group"
+      >
+        {theme === 'dark' ? (
+          <>
+            <Sun className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform" />
+            <span className="text-xs font-semibold pr-1">Chế độ Sáng</span>
+          </>
+        ) : (
+          <>
+            <Moon className="w-4 h-4 text-cyan-400 group-hover:-rotate-12 transition-transform" />
+            <span className="text-xs font-semibold pr-1">Chế độ Tối</span>
+          </>
+        )}
+      </button>
 
       {/* Main App Header */}
       <Header
@@ -221,6 +275,8 @@ export default function App() {
         criticalCount={criticalCount}
         isStepLoading={isStepLoading}
         simStep={simStep}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main Content Area */}

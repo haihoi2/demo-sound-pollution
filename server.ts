@@ -574,6 +574,29 @@ app.post('/api/v1/reset', (req: Request, res: Response) => {
   });
 });
 
+// Explicit 404 handler for all /api/* routes to prevent Vite from returning index.html
+app.all('/api/*', (req: Request, res: Response) => {
+  res.status(404).json({
+    status: 'error',
+    code: 404,
+    message: `API endpoint not found: ${req.method} ${req.originalUrl || req.url}`
+  });
+});
+
+// Global Express error handler for API routes
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('API Error caught by middleware:', err);
+  if (req.url && req.url.startsWith('/api/')) {
+    res.status(500).json({
+      status: 'error',
+      code: 500,
+      message: err?.message || 'Internal server error occurred in IoT Gateway'
+    });
+    return;
+  }
+  next(err);
+});
+
 // ======================== Vite / Static Serving ========================
 
 async function startServer() {
