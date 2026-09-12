@@ -1,0 +1,6 @@
+{
+  "name": "IoT NoiseSense - Trạm Đo Ô Nhiễm Tiếng Ồn",
+  "description": "Hệ thống mô phỏng trạm quan trắc ô nhiễm tiếng ồn IoT thời gian thực, trực quan hóa HTTP request/response & RESTful API cho học tập và nghiên cứu IoT.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
